@@ -1,0 +1,31 @@
+import { useCallback, useEffect, useState } from 'react';
+import { Edit3, ExternalLink, Plus, Search, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
+import AdminPageHeader from '../../components/AdminPageHeader';
+import ImageWithFallback from '../../components/ImageWithFallback';
+import Modal from '../../components/Modal';
+import { EmptyState, ErrorState, LoadingState } from '../../components/StateViews';
+import { images } from '../../data/siteData';
+import { getApiError, hotelApi } from '../../services/api';
+import { formatCurrency } from '../../utils/format';
+
+const emptyForm = { name: '', location: '', description: '', pricePerNight: '', rating: '', starRating: 4, imageUrl: '', websiteUrl: '', available: true };
+
+export default function AdminHotelsPage() {
+  const [items, setItems] = useState([]);
+  const [search, setSearch] = useState('');
+  const [form, setForm] = useState(emptyForm);
+  const [editing, setEditing] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const load = useCallback(async () => { setLoading(true); try { setItems((await hotelApi.list(search ? { search } : {})).data); setError(''); } catch (err) { setError(getApiError(err)); } finally { setLoading(false); } }, [search]);
+  useEffect(() => { const timer = setTimeout(load, 220); return () => clearTimeout(timer); }, [load]);
+  const showCreate = () => { setEditing(null); setForm(emptyForm); setOpen(true); };
+  const showEdit = (item) => { setEditing(item.id); setForm({ name: item.name, location: item.location, description: item.description || '', pricePerNight: item.pricePerNight, rating: item.rating || '', starRating: item.starRating || 4, imageUrl: item.imageUrl || '', websiteUrl: item.websiteUrl || '', available: Boolean(item.available) }); setOpen(true); };
+  const payload = () => ({ ...form, pricePerNight: Number(form.pricePerNight), rating: form.rating === '' ? null : Number(form.rating), starRating: Number(form.starRating), available: Boolean(form.available) });
+  const submit = async (event) => { event.preventDefault(); try { editing ? await hotelApi.update(editing, payload()) : await hotelApi.create(payload()); toast.success(`Hotel ${editing ? 'updated' : 'created'}.`); setOpen(false); load(); } catch (err) { toast.error(getApiError(err)); } };
+  const remove = async (id) => { if (!window.confirm('Delete this hotel?')) return; try { await hotelApi.remove(id); toast.success('Hotel deleted.'); load(); } catch (err) { toast.error(getApiError(err)); } };
+  const update = (event) => setForm({ ...form, [event.target.name]: event.target.type === 'checkbox' ? event.target.checked : event.target.value });
+  return <><AdminPageHeader title="Hotels" text="Manage selected 3–5 star stays, indicative nightly rates and official links." action={<button className="button button--primary" onClick={showCreate}><Plus /> Add hotel</button>} /><div className="admin-toolbar"><label className="field field--search"><Search /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search hotel or location..." /></label><span>{items.length} records</span></div>{loading ? <LoadingState /> : error ? <ErrorState message={error} onRetry={load} /> : items.length ? <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Hotel</th><th>Class</th><th>Rating</th><th>Nightly rate</th><th>Availability</th><th>Actions</th></tr></thead><tbody>{items.map((item) => <tr key={item.id}><td><div className="table-entity"><ImageWithFallback src={item.imageUrl} fallback={images.hotel} alt="" /><div><strong>{item.name}</strong><small>{item.location}</small></div></div></td><td>{item.starRating || 4} stars</td><td>{item.rating || '—'}</td><td>{formatCurrency(item.pricePerNight)}</td><td><span className={`status ${item.available ? 'status--active' : 'status--inactive'}`}>{item.available ? 'AVAILABLE' : 'UNAVAILABLE'}</span></td><td><div className="table-actions">{item.websiteUrl && <a href={item.websiteUrl} target="_blank" rel="noreferrer"><ExternalLink /></a>}<button onClick={() => showEdit(item)}><Edit3 /></button><button className="danger" onClick={() => remove(item.id)}><Trash2 /></button></div></td></tr>)}</tbody></table></div> : <EmptyState title="No hotels yet" />}<Modal open={open} title={editing ? 'Edit hotel' : 'Add hotel'} onClose={() => setOpen(false)} wide><form className="admin-form" onSubmit={submit}><label className="field"><span>Hotel name</span><input name="name" value={form.name} onChange={update} required maxLength="150" /></label><label className="field"><span>Location</span><input name="location" value={form.location} onChange={update} required maxLength="150" /></label><label className="field"><span>Indicative rate / night (LKR)</span><input name="pricePerNight" type="number" min="1" step="0.01" value={form.pricePerNight} onChange={update} required /></label><label className="field"><span>Guest rating (0–5)</span><input name="rating" type="number" min="0" max="5" step="0.1" value={form.rating} onChange={update} /></label><label className="field"><span>Hotel class</span><select name="starRating" value={form.starRating} onChange={update}><option value="3">3 star</option><option value="4">4 star</option><option value="5">5 star</option></select></label><label className="field field--checkbox"><input name="available" type="checkbox" checked={form.available} onChange={update} /><span>Currently available</span></label><label className="field field--full"><span>Description</span><textarea name="description" rows="4" value={form.description} onChange={update} maxLength="2000" /></label><label className="field"><span>Image URL</span><input name="imageUrl" type="url" value={form.imageUrl} onChange={update} placeholder="https://..." maxLength="500" /></label><label className="field"><span>Official website URL</span><input name="websiteUrl" type="url" value={form.websiteUrl} onChange={update} placeholder="https://hotel.example" maxLength="500" /></label><div className="form-actions field--full"><button type="button" className="button button--secondary" onClick={() => setOpen(false)}>Cancel</button><button className="button button--primary">{editing ? 'Save changes' : 'Create hotel'}</button></div></form></Modal></>;
+}
