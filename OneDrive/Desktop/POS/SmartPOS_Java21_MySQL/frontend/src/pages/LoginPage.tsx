@@ -1,0 +1,7 @@
+import {FormEvent,useState} from 'react'
+import {useAuth} from '../contexts/AuthContext'
+export default function LoginPage(){
+ const{login}=useAuth();const[username,setUsername]=useState('cashier');const[password,setPassword]=useState('Cashier@123');const[error,setError]=useState('');const[busy,setBusy]=useState(false)
+ const submit=async(e:FormEvent)=>{e.preventDefault();setError('');setBusy(true);try{await login(username,password)}catch(e:any){setError(e.message)}finally{setBusy(false)}}
+ return <div className="login-shell"><div className="login-brand"><div className="brand-mark">▣</div><h1>SmartPOS</h1><p>Advanced Offline-First POS System</p><div className="feature-pills"><span>Offline Billing</span><span>Inventory</span><span>Reports</span><span>RBAC</span></div></div><form className="login-card" onSubmit={submit}><h2>Welcome back</h2><p className="muted">Sign in with your employee account.</p><label>Username<input value={username} onChange={e=>setUsername(e.target.value)} autoFocus/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)}/></label>{error&&<div className="alert error">{error}</div>}<button className="btn primary wide" disabled={busy}>{busy?'Signing in...':'Sign In'}</button><div className="demo-creds"><b>Development accounts</b><br/>admin / Admin@123<br/>manager / Manager@123<br/>cashier / Cashier@123</div></form></div>
+}

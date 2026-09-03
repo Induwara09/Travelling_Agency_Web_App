@@ -1,0 +1,105 @@
+SMARTPOS - FIRST RUN GUIDE (WINDOWS)
+===================================
+
+Target stack
+------------
+Java: Java 21 LTS (your Java 21.0.12 LTS is supported)
+Backend: Spring Boot
+Database: MySQL 8.x
+Frontend: React + TypeScript + Vite
+Target OS: Windows 10/11 64-bit
+
+STEP 1 - Check requirements
+---------------------------
+Open PowerShell inside the project folder and run:
+
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\check-requirements.ps1
+
+Install anything marked MISSING.
+
+STEP 2 - Create MySQL database
+------------------------------
+Open MySQL Workbench and run database\setup.sql.
+
+Default development connection:
+Database: smartpos
+User: smartpos
+Password: SmartPos@2026
+
+Change the password before production use.
+
+STEP 3 - Configure environment variables
+----------------------------------------
+Review:
+  scripts\windows\set-env-example.ps1
+
+Run/edit it for your environment. At minimum configure the MySQL connection and JWT secret.
+
+STEP 4 - Start backend
+----------------------
+Open PowerShell:
+
+cd backend
+mvn spring-boot:run
+
+Expected URL:
+http://localhost:8080/api/health
+
+STEP 5 - Start frontend
+-----------------------
+Open another PowerShell:
+
+cd frontend
+npm install
+npm run dev
+
+Open:
+http://localhost:5173
+
+STEP 6 - Development accounts
+-----------------------------
+Admin:   admin   / Admin@123
+Manager: manager / Manager@123
+Cashier: cashier / Cashier@123
+
+Change these before any real deployment.
+
+STEP 7 - Test offline mode
+--------------------------
+1. Keep MySQL + Spring Boot + POS running locally.
+2. Disconnect the internet/Wi-Fi from the WAN while retaining the local PC/network.
+3. Log in with an already-created local user.
+4. Make a cash sale.
+5. Confirm stock decreases and the receipt can print.
+6. Confirm queued email/cloud work remains pending.
+7. Restore internet and verify queued jobs retry.
+
+STEP 8 - Build one Windows production application
+-------------------------------------------------
+Run:
+
+powershell -ExecutionPolicy Bypass -File .\scripts\windows\build-all.ps1
+
+This builds the React frontend, embeds it into Spring Boot and builds:
+backend\target\smartpos-backend-1.0.0.jar
+
+Start it with:
+java -jar backend\target\smartpos-backend-1.0.0.jar
+
+Then open:
+http://localhost:8080
+
+STEP 9 - Cashier auto-start
+---------------------------
+After a successful production build, review/run:
+
+scripts\windows\install-autostart-task.ps1
+
+This can launch SmartPOS automatically after the Windows Cashier account logs in.
+
+IMPORTANT
+---------
+- Normal POS checkout is local-first and does not depend on internet connectivity.
+- Email and optional cloud sync are queued when unavailable.
+- Card-terminal integration depends on the selected bank/acquirer hardware/API.
+- Test the exact 80mm printer, cash drawer and backup/restore flow before production use.

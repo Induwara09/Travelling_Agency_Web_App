@@ -1,0 +1,68 @@
+server:
+  port: ${SMARTPOS_PORT:8080}
+  error:
+    include-message: always
+
+spring:
+  datasource:
+    url: ${SMARTPOS_DB_URL:jdbc:mysql://localhost:3306/smartpos?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Colombo&characterEncoding=utf8}
+    username: ${SMARTPOS_DB_USER:smartpos}
+    password: ${SMARTPOS_DB_PASSWORD:SmartPos@2026}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Colombo
+  jackson:
+    time-zone: Asia/Colombo
+  mail:
+    host: ${SMARTPOS_MAIL_HOST:localhost}
+    port: ${SMARTPOS_MAIL_PORT:25}
+    username: ${SMARTPOS_MAIL_USER:}
+    password: ${SMARTPOS_MAIL_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${SMARTPOS_MAIL_AUTH:false}
+      mail.smtp.starttls.enable: ${SMARTPOS_MAIL_STARTTLS:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+smartpos:
+  jwt:
+    # Change this in production. Minimum 32 bytes for HS256.
+    secret: ${SMARTPOS_JWT_SECRET:CHANGE_ME_SMARTPOS_JWT_SECRET_2026_1234567890}
+    expiration-minutes: ${SMARTPOS_JWT_EXP_MINUTES:720}
+  business:
+    name: ${SMARTPOS_BUSINESS_NAME:Mountain Cafe}
+    address: ${SMARTPOS_BUSINESS_ADDRESS:21 Lake Road, Nuwara Eliya}
+    phone: ${SMARTPOS_BUSINESS_PHONE:052-0000000}
+    email: ${SMARTPOS_BUSINESS_EMAIL:owner@example.com}
+    currency: ${SMARTPOS_CURRENCY:LKR}
+    invoice-prefix: ${SMARTPOS_INVOICE_PREFIX:INV}
+    service-charge-percent: ${SMARTPOS_SERVICE_CHARGE:0}
+    tax-percent: ${SMARTPOS_TAX_PERCENT:0}
+  bootstrap:
+    admin-password: ${SMARTPOS_ADMIN_PASSWORD:Admin@123}
+    manager-password: ${SMARTPOS_MANAGER_PASSWORD:Manager@123}
+    cashier-password: ${SMARTPOS_CASHIER_PASSWORD:Cashier@123}
+  reports:
+    monthly-cron: ${SMARTPOS_MONTHLY_REPORT_CRON:0 0 8 1 * *}
+    recipients: ${SMARTPOS_REPORT_RECIPIENTS:}
+  backup:
+    enabled: ${SMARTPOS_BACKUP_ENABLED:true}
+    directory: ${SMARTPOS_BACKUP_DIR:C:/SmartPOS/Backups}
+    cron: ${SMARTPOS_BACKUP_CRON:0 59 23 * * *}
+    mysqldump: ${SMARTPOS_MYSQLDUMP_PATH:mysqldump}
+  device:
+    agent-key: ${SMARTPOS_DEVICE_AGENT_KEY:CHANGE_ME_DEVICE_AGENT_KEY}
+  sync:
+    enabled: ${SMARTPOS_SYNC_ENABLED:false}
+    endpoint: ${SMARTPOS_SYNC_ENDPOINT:}
+    api-key: ${SMARTPOS_SYNC_API_KEY:}

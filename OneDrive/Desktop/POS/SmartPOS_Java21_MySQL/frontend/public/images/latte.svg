@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="260" viewBox="0 0 400 260">
+<defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#ecfdf5"/><stop offset="1" stop-color="#d1fae5"/></linearGradient></defs>
+<rect width="400" height="260" rx="32" fill="url(#g)"/>
+<circle cx="200" cy="115" r="72" fill="#fff" stroke="#10b981" stroke-width="6"/>
+<text x="200" y="135" text-anchor="middle" font-family="Arial" font-size="54" fill="#065f46">LATTE</text>
+<text x="200" y="215" text-anchor="middle" font-family="Arial" font-size="18" fill="#047857">SmartPOS Offline Asset</text>
+</svg>

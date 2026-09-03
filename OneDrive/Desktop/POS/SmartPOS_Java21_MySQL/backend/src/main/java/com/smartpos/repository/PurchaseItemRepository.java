@@ -1,0 +1,4 @@
+package com.smartpos.repository;
+import com.smartpos.model.PurchaseItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface PurchaseItemRepository extends JpaRepository<PurchaseItem,Long>{}
