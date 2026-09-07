@@ -1,0 +1,17 @@
+import { useMemo, useState } from 'react';
+import { Mail, MapPin, Phone, Send } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import PageHero from '../../components/PageHero';
+import { getApiError, inquiryApi } from '../../services/api';
+import { images } from '../../data/siteData';
+
+export default function ContactPage() {
+  const [params] = useSearchParams();
+  const initialInterest = useMemo(() => params.get('interest') || '', [params]);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', country: '', travelMonth: '', guests: 2, interests: initialInterest, message: '' });
+  const [sending, setSending] = useState(false);
+  const update = (event) => setForm({ ...form, [event.target.name]: event.target.value });
+  const submit = async (event) => { event.preventDefault(); setSending(true); try { await inquiryApi.create({ ...form, guests: Number(form.guests) }); toast.success('Your journey request is with our travel team.'); setForm({ name: '', email: '', phone: '', country: '', travelMonth: '', guests: 2, interests: '', message: '' }); } catch (err) { toast.error(getApiError(err)); } finally { setSending(false); } };
+  return <><PageHero eyebrow="Start a conversation" title="Tell us where your curiosity leads" text="Share a few details. Your request will appear in the secure admin planning desk." image={images.coast} /><section className="section container contact-grid"><div className="contact-copy"><span className="eyebrow">Your journey, your pace</span><h2>Let’s shape something memorable.</h2><p>Use the form for a tailor-made trip request, honeymoon, family holiday or special-interest journey.</p><div className="contact-details"><span><MapPin /> Colombo, Sri Lanka</span><a href="tel:+94112345678"><Phone /> +94 11 234 5678</a><a href="mailto:hello@serendibtrails.lk"><Mail /> hello@serendibtrails.lk</a></div><small>Academic demonstration contact details.</small></div><form className="trip-form" onSubmit={submit}><label className="field"><span>Name</span><input name="name" value={form.name} onChange={update} required maxLength="100" /></label><label className="field"><span>Email</span><input name="email" type="email" value={form.email} onChange={update} required maxLength="150" /></label><label className="field"><span>Phone</span><input name="phone" value={form.phone} onChange={update} maxLength="30" /></label><label className="field"><span>Country</span><input name="country" value={form.country} onChange={update} maxLength="100" /></label><label className="field"><span>Preferred travel month</span><input name="travelMonth" type="month" value={form.travelMonth} onChange={update} /></label><label className="field"><span>Travellers</span><input name="guests" type="number" min="1" max="50" value={form.guests} onChange={update} required /></label><label className="field field--full"><span>Interests</span><input name="interests" value={form.interests} onChange={update} maxLength="500" placeholder="Wildlife, food, coast, culture..." /></label><label className="field field--full"><span>What would make this trip special?</span><textarea name="message" value={form.message} onChange={update} rows="6" required maxLength="3000" /></label><button className="button button--primary field--full" disabled={sending}>{sending ? 'Sending...' : <>Send journey request <Send /></>}</button></form></section></>;
+}

@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "Sri Lanka Travel Agency API",
+    "description": "Complete API collection for the Spring Boot backend. Login first; the token is stored automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "destinationId", "value": "1" },
+    { "key": "packageId", "value": "1" },
+    { "key": "hotelId", "value": "1" },
+    { "key": "bookingId", "value": "1" },
+    { "key": "userId", "value": "1" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Induwara\",\n  \"email\": \"induwara@example.com\",\n  \"password\": \"StrongPass123\",\n  \"phone\": \"0771234567\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/register"
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["const data = pm.response.json();", "if (data.token) pm.collectionVariables.set('token', data.token);"] }
+          }]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"induwara@example.com\",\n  \"password\": \"StrongPass123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["const data = pm.response.json();", "if (data.token) pm.collectionVariables.set('token', data.token);"] }
+          }]
+        }
+      ]
+    },
+    {
+      "name": "Destinations",
+      "item": [
+        {
+          "name": "Create Destination (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella\",\n  \"location\": \"Badulla\",\n  \"description\": \"Beautiful hill-country destination\",\n  \"imageUrl\": \"https://example.com/ella.jpg\"\n}" },
+            "url": "{{baseUrl}}/api/destinations"
+          }
+        },
+        { "name": "Get All Destinations", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/destinations" } },
+        { "name": "Get Destination By ID", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/destinations/{{destinationId}}" } },
+        {
+          "name": "Update Destination (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella\",\n  \"location\": \"Badulla District\",\n  \"description\": \"Updated destination\",\n  \"imageUrl\": \"https://example.com/ella.jpg\"\n}" },
+            "url": "{{baseUrl}}/api/destinations/{{destinationId}}"
+          }
+        },
+        { "name": "Delete Destination (ADMIN)", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/destinations/{{destinationId}}" } }
+      ]
+    },
+    {
+      "name": "Tour Packages",
+      "item": [
+        {
+          "name": "Create Package (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella Adventure\",\n  \"description\": \"Three-day hill-country tour\",\n  \"price\": 350.00,\n  \"durationDays\": 3,\n  \"imageUrl\": \"https://example.com/package.jpg\",\n  \"category\": \"Adventure\",\n  \"status\": \"ACTIVE\",\n  \"destinationId\": {{destinationId}}\n}" },
+            "url": "{{baseUrl}}/api/packages"
+          }
+        },
+        { "name": "Get All Packages", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/packages" } },
+        { "name": "Search and Filter Packages", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/packages?search=Ella&category=Adventure&destinationId={{destinationId}}&minPrice=100&maxPrice=1000&minDuration=1&maxDuration=10&status=ACTIVE" } },
+        { "name": "Get Package By ID", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/packages/{{packageId}}" } },
+        {
+          "name": "Update Package (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella Adventure Updated\",\n  \"description\": \"Updated package\",\n  \"price\": 400.00,\n  \"durationDays\": 3,\n  \"imageUrl\": \"https://example.com/package.jpg\",\n  \"category\": \"Adventure\",\n  \"status\": \"ACTIVE\",\n  \"destinationId\": {{destinationId}}\n}" },
+            "url": "{{baseUrl}}/api/packages/{{packageId}}"
+          }
+        },
+        { "name": "Delete Package (ADMIN)", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/packages/{{packageId}}" } }
+      ]
+    },
+    {
+      "name": "Hotels",
+      "item": [
+        {
+          "name": "Create Hotel (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella View Hotel\",\n  \"location\": \"Ella\",\n  \"description\": \"Mountain-view hotel\",\n  \"pricePerNight\": 75.00,\n  \"rating\": 4.5,\n  \"imageUrl\": \"https://example.com/hotel.jpg\",\n  \"available\": true\n}" },
+            "url": "{{baseUrl}}/api/hotels"
+          }
+        },
+        { "name": "Get All Hotels", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/hotels" } },
+        { "name": "Get Hotel By ID", "request": { "auth": { "type": "noauth" }, "method": "GET", "url": "{{baseUrl}}/api/hotels/{{hotelId}}" } },
+        {
+          "name": "Update Hotel (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Ella View Hotel Updated\",\n  \"location\": \"Ella\",\n  \"description\": \"Updated mountain-view hotel\",\n  \"pricePerNight\": 85.00,\n  \"rating\": 4.7,\n  \"imageUrl\": \"https://example.com/hotel.jpg\",\n  \"available\": true\n}" },
+            "url": "{{baseUrl}}/api/hotels/{{hotelId}}"
+          }
+        },
+        { "name": "Delete Hotel (ADMIN)", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/hotels/{{hotelId}}" } }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create My Booking",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"packageId\": {{packageId}},\n  \"travelDate\": \"2026-12-20\",\n  \"numberOfGuests\": 2\n}" },
+            "url": "{{baseUrl}}/api/bookings"
+          }
+        },
+        { "name": "Get My Bookings", "request": { "method": "GET", "url": "{{baseUrl}}/api/bookings/my" } },
+        { "name": "Cancel My Booking", "request": { "method": "PUT", "url": "{{baseUrl}}/api/bookings/{{bookingId}}/cancel" } }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        { "name": "Dashboard", "request": { "method": "GET", "url": "{{baseUrl}}/api/admin/dashboard" } },
+        { "name": "Get All Bookings", "request": { "method": "GET", "url": "{{baseUrl}}/api/admin/bookings" } },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"bookingStatus\": \"CONFIRMED\",\n  \"paymentStatus\": \"PAID\"\n}" },
+            "url": "{{baseUrl}}/api/admin/bookings/{{bookingId}}/status"
+          }
+        },
+        { "name": "Delete Booking", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/admin/bookings/{{bookingId}}" } },
+        { "name": "Get All Users", "request": { "method": "GET", "url": "{{baseUrl}}/api/admin/users" } },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"role\": \"ADMIN\"\n}" },
+            "url": "{{baseUrl}}/api/admin/users/{{userId}}/role"
+          }
+        },
+        { "name": "Delete User", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/admin/users/{{userId}}" } }
+      ]
+    }
+  ]
+}
