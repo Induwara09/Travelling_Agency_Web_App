@@ -1,98 +1,115 @@
-# Sri Lanka Travel Agency — Complete Full-Stack Project
+# 🌴 Sri Lanka Travel Agency – DevOps & Kubernetes Project
 
-Professional customer travel website and administration portal using React,
-Spring Boot and MySQL.
 
-## V3.1 exact-place image correction
 
-- Destination cards no longer reuse one district photo for unrelated places.
-- Automatic records search Wikimedia Commons using the destination name and district.
-- Confirmed exact image URLs remain available immediately, with local fallbacks for failures.
-- Admin custom image URLs have permanent priority through the database `image_mode` field.
+A full-stack Sri Lanka Travel Agency application enhanced with a complete DevOps workflow using **GitHub Actions, Docker, GitHub Container Registry, Kubernetes, k3d, Traefik, MySQL, Spring Boot Actuator, and Horizontal Pod Autoscaling**.
 
-## Project structure
 
-```text
-Sri_Lanka_Travel_Agency_Full_Stack/
-├── frontend/       React + Vite customer website and admin portal
-├── travel/         Spring Boot + JWT + JPA backend
-└── database/       MySQL 8 schema and optional demo content
-```
 
-## Features
+## 🚀 DevOps Features
 
-- Responsive green, blue and golden visual system
-- Fully separate light and dark themes with persistent switch
-- Five-scene cinematic hero slider, destination journeys and illustrated Sri Lanka road map
-- Original high-resolution Sigiriya, tea-country, wildlife, coast and Galle visuals
-- Complete 371-place catalogue across all 25 districts and eight travel themes
-- District/category/featured search filters with destination detail and related-place views
-- Register/login with JWT and CUSTOMER/ADMIN access
-- Customer booking creation, tracking and cancellation
-- Animated admin dashboard with destination district/category charts, booking statistics and revenue
-- Advanced admin destination CRUD with image sources, tags, categories and homepage featuring
-- Admin package, inquiry, booking and user management
-- Public tailor-made trip form with admin inquiry/status workflow
-- Admin booking/payment status and user-role management
-- Search and price, duration, category and destination filters
 
-## 1. MySQL
 
-For a new database, open MySQL Workbench and run:
+- GitHub Actions CI/CD pipeline
 
-```text
-database/travel_db_full.sql
-```
+- Maven automated backend build
 
-The SQL is non-destructive: it creates or safely updates the schema and inserts
-the supplied 371 destinations only when each name is missing. Existing records
-and administrator edits are preserved. Run the entire script even when
-`travel_db` already exists.
+- Dockerized Spring Boot backend
 
-## 2. Backend
+- Docker images stored in GitHub Container Registry (GHCR)
 
-Set Windows User Environment Variables. Never write real secrets in Git:
+- Local Kubernetes cluster using k3d
+
+- MySQL deployment with persistent storage
+
+- Kubernetes ConfigMap and Secret management
+
+- Backend Deployment with multiple replicas
+
+- Kubernetes ClusterIP services
+
+- Traefik Ingress routing
+
+- Spring Boot Actuator health monitoring
+
+- Kubernetes readiness probes
+
+- Kubernetes liveness probes
+
+- Horizontal Pod Autoscaler (HPA)
+
+- Kubernetes self-healing
+
+- Rolling deployments
+
+- CPU-based automatic scaling
+
+
+
+## 🏗 Architecture
+
+
 
 ```text
-DB_PASSWORD=your MySQL password
-JWT_SECRET=a long random Base64-encoded secret
-ADMIN_NAME=Travel Admin
-ADMIN_EMAIL=admin@travel.lk
-ADMIN_PASSWORD=your strong admin password
-```
 
-For local development the included JWT fallback works, but set your own
-`JWT_SECRET` before deployment. When `ADMIN_EMAIL` and `ADMIN_PASSWORD` are
-present, startup creates the admin or safely synchronises an existing row to
-the configured ADMIN role and BCrypt password.
+Developer
 
-Then open a new PowerShell:
+&#x20;  |
 
-```powershell
-cd travel
-mvn clean test
-mvn spring-boot:run
-```
+&#x20;  | git push
 
-Backend: `http://localhost:8080`
+&#x20;  v
 
-## 3. Frontend
+GitHub Repository
 
-Open a second PowerShell:
+&#x20;  |
 
-```powershell
-cd frontend
-Copy-Item .env.example .env
-npm install
-npm run dev
-```
+&#x20;  v
 
-Frontend: `http://localhost:5173`
+GitHub Actions CI/CD
 
-## Destination photographs
+&#x20;  |
 
-The customer website always has bundled local fallback visuals. Confirmed
-major-place records contain curated Wikimedia Commons image redirects. Other
-records resolve an exact-place Commons photo by destination name and district
-instead of reusing one district image. Administrators can override any result
-with a custom licensed image URL. See `frontend/IMAGE_CREDITS.md` for details.
+&#x20;  | Build Spring Boot JAR
+
+&#x20;  | Build Docker Image
+
+&#x20;  v
+
+GitHub Container Registry (GHCR)
+
+&#x20;  |
+
+&#x20;  v
+
+Kubernetes / k3d Cluster
+
+&#x20;  |
+
+&#x20;  +----------------------+
+
+&#x20;  |                      |
+
+&#x20;  v                      v
+
+Traefik Ingress       MySQL Service
+
+&#x20;  |                      |
+
+&#x20;  v                      v
+
+Backend Service       MySQL Pod
+
+&#x20;  |
+
+&#x20;  v
+
+Spring Boot Backend Pods
+
+&#x20;  |
+
+&#x20;  +--> Readiness Probe
+
+&#x20;  +--> Liveness Probe
+
+&#x20;  +--> HPA Autoscaling
