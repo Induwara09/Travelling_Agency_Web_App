@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: travel-frontend
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: travel-frontend
+
+  template:
+    metadata:
+      labels:
+        app: travel-frontend
+
+    spec:
+      containers:
+        - name: travel-frontend
+          image: ghcr.io/induwara09/travel-agency-frontend:latest
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 80
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+
+---
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: travel-frontend-service
+
+spec:
+  selector:
+    app: travel-frontend
+
+  ports:
+    - port: 80
+      targetPort: 80
+
+  type: ClusterIP

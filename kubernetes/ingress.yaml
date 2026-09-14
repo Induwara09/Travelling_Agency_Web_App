@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
-  name: travel-backend-ingress
+  name: travel-app-ingress
 
 spec:
   ingressClassName: traefik
@@ -11,10 +11,18 @@ spec:
     - host: travel.local
       http:
         paths:
-          - path: /
+          - path: /api
             pathType: Prefix
             backend:
               service:
                 name: travel-backend-service
                 port:
                   number: 8080
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: travel-frontend-service
+                port:
+                  number: 80
