@@ -43,7 +43,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push Docker Image
+      - name: Build and Push Backend Docker Image
         if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
@@ -52,7 +52,8 @@ jobs:
           tags: |
             ghcr.io/induwara09/travel-agency-backend:latest
             ghcr.io/induwara09/travel-agency-backend:${{ github.sha }}
-              - name: Build and Push Frontend Docker Image
+
+      - name: Build and Push Frontend Docker Image
         if: github.event_name == 'push'
         uses: docker/build-push-action@v6
         with:
