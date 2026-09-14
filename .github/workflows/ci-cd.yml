@@ -52,3 +52,12 @@ jobs:
           tags: |
             ghcr.io/induwara09/travel-agency-backend:latest
             ghcr.io/induwara09/travel-agency-backend:${{ github.sha }}
+              - name: Build and Push Frontend Docker Image
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ghcr.io/induwara09/travel-agency-frontend:latest
+            ghcr.io/induwara09/travel-agency-frontend:${{ github.sha }}
