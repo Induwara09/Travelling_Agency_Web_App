@@ -4,56 +4,77 @@
 
 [![CI/CD](https://github.com/Induwara09/Travelling_Agency_Web_App/actions/workflows/ci-cd.yml/badge.svg?branch=devops-version-1)](https://github.com/Induwara09/Travelling_Agency_Web_App/actions)
 ![Java](https://img.shields.io/badge/Java-21-orange)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-brightgreen)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-6DB33F)
 ![React](https://img.shields.io/badge/React-Vite-61DAFB)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-k3d%20%2F%20K3s-326CE5)
 ![MySQL](https://img.shields.io/badge/MySQL-8.4-4479A1)
+![Ingress](https://img.shields.io/badge/Ingress-Traefik-24A1C1)
 ![License](https://img.shields.io/badge/License-Educational-lightgrey)
 
-**A full-stack Sri Lanka Travel Agency application, re-engineered with a production-style DevOps and Kubernetes workflow.**
+**A full-stack Sri Lanka Travel Agency application re-engineered with a production-style DevOps and Kubernetes workflow.**
 
 </div>
 
 ---
 
+<a id="overview"></a>
 ## 📖 Overview
 
-This project pairs a **React + Vite** frontend with a **Spring Boot** backend and a **MySQL** database, then wraps the whole stack in a real-world DevOps pipeline: **Docker** containerization, **GitHub Actions** CI/CD, image publishing to **GitHub Container Registry (GHCR)**, and deployment to a local **k3d/K3s** Kubernetes cluster behind **Traefik Ingress**.
+This project combines a **React + Vite frontend**, a **Spring Boot backend**, and a **MySQL database** with a practical DevOps workflow built around **Docker**, **GitHub Actions**, **GitHub Container Registry (GHCR)**, **Kubernetes**, **k3d/K3s**, and **Traefik Ingress**.
 
-It's built as a hands-on demonstration of practical DevOps and platform-engineering concepts — containerization, CI/CD automation, Kubernetes deployments, persistent storage, health probes, self-healing, horizontal pod autoscaling, multi-replica services, configuration/secret management, and unified ingress routing.
+The project demonstrates how a full-stack application can move from local development into a containerized and Kubernetes-managed environment with:
+
+- CI/CD automation
+- Backend and frontend containerization
+- Container image publishing to GHCR
+- Kubernetes Deployments and Services
+- Multiple application replicas
+- MySQL persistent storage
+- ConfigMaps and Secrets
+- Spring Boot Actuator health probes
+- Kubernetes self-healing
+- Horizontal Pod Autoscaling
+- Traefik Ingress routing
+- End-to-end deployment verification
+
+> **Scope:** This is a production-style **local Kubernetes implementation** using k3d/K3s. It demonstrates production DevOps concepts, but it is not an internet-facing cloud production deployment such as EKS, AKS, or GKE.
 
 ---
 
+<a id="table-of-contents"></a>
 ## 📑 Table of Contents
 
-- [Technologies Used](#-technologies-used)
-- [DevOps Features](#️-devops-features)
-- [Project Structure](#-project-structure)
-- [System Architecture](#️-system-architecture)
-- [Getting Started](#-getting-started)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [Docker](#-docker)
-- [Kubernetes Cluster](#️-kubernetes-cluster)
-- [MySQL Deployment & Persistent Storage](#️-mysql-deployment)
-- [Configuration & Secret Management](#-configmap-and-secret-management)
-- [Backend Deployment](#-backend-kubernetes-deployment)
-- [Frontend Deployment](#-frontend-kubernetes-deployment)
-- [Traefik Ingress](#-traefik-ingress)
-- [Health Probes](#️-readiness-and-liveness-probes)
-- [Horizontal Pod Autoscaling](#-horizontal-pod-autoscaling)
-- [Self-Healing](#️-kubernetes-self-healing)
-- [Rolling Updates](#-rolling-updates)
-- [Troubleshooting](#-health-and-troubleshooting-commands)
-- [Security](#-security)
-- [Project Result](#-project-result)
-- [Screenshots](#-project-evidence--screenshots)
-- [Learning Outcomes](#-key-devops-learning-outcomes)
-- [Future Improvements](#-future-improvements)
-- [Author & Repository](#-author)
+- [Technologies Used](#technologies-used)
+- [DevOps Features](#devops-features)
+- [Project Structure](#project-structure)
+- [System Architecture](#system-architecture)
+- [Getting Started](#getting-started)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Docker](#docker)
+- [Kubernetes Cluster](#kubernetes-cluster)
+- [MySQL Deployment](#mysql-deployment)
+- [Persistent Storage](#persistent-storage)
+- [ConfigMap and Secret Management](#configmap-and-secret-management)
+- [Backend Kubernetes Deployment](#backend-kubernetes-deployment)
+- [Frontend Kubernetes Deployment](#frontend-kubernetes-deployment)
+- [Traefik Ingress](#traefik-ingress)
+- [Readiness and Liveness Probes](#readiness-and-liveness-probes)
+- [Horizontal Pod Autoscaling](#horizontal-pod-autoscaling)
+- [Kubernetes Self-Healing](#kubernetes-self-healing)
+- [Rolling Updates](#rolling-updates)
+- [Troubleshooting](#troubleshooting)
+- [Security](#security)
+- [Project Result](#project-result)
+- [Project Evidence](#project-evidence)
+- [Learning Outcomes](#learning-outcomes)
+- [Future Improvements](#future-improvements)
+- [Author](#author)
+- [Repository](#repository)
 
 ---
 
+<a id="technologies-used"></a>
 ## 🚀 Technologies Used
 
 | Layer | Technology |
@@ -65,37 +86,51 @@ It's built as a hands-on demonstration of practical DevOps and platform-engineer
 | **CI/CD** | GitHub Actions |
 | **Containerization** | Docker |
 | **Registry** | GitHub Container Registry (GHCR) |
-| **Orchestration** | Kubernetes (k3d / K3s) |
+| **Orchestration** | Kubernetes |
+| **Local Kubernetes** | k3d / K3s |
 | **Ingress** | Traefik |
-| **Observability** | Spring Boot Actuator |
-| **Scaling** | Horizontal Pod Autoscaler (HPA) |
+| **Health Monitoring** | Spring Boot Actuator |
+| **Autoscaling** | Horizontal Pod Autoscaler (HPA) |
 
 ---
 
+<a id="devops-features"></a>
 ## ⚙️ DevOps Features
 
-- ✅ GitHub-based source control with a dedicated `devops-version-1` branch
-- ✅ Automated Maven backend build via GitHub Actions
+- ✅ Dedicated `devops-version-1` branch for DevOps work
+- ✅ Automated Maven backend build using GitHub Actions
 - ✅ Dockerized Spring Boot backend
-- ✅ Multi-stage Dockerized React frontend, served via Nginx
-- ✅ Backend & frontend images published to GHCR
-- ✅ Kubernetes Deployments for backend, frontend, and MySQL
-- ✅ Multiple replicas for both backend and frontend
-- ✅ ClusterIP Services + Traefik Ingress routing
-- ✅ Spring Boot Actuator readiness/liveness endpoints
-- ✅ CPU/memory resource requests & limits
-- ✅ Horizontal Pod Autoscaler with verified scale-up/scale-down
-- ✅ Kubernetes self-healing (automatic pod replacement)
-- ✅ MySQL persistent storage via PVC
-- ✅ ConfigMap and Secret-based configuration management
-- ✅ Rolling deployment support
-- ✅ Full-stack routing through a single host
-- ✅ CI/CD pipeline verified end-to-end
+- ✅ Multi-stage Dockerized React frontend
+- ✅ Nginx production frontend server
+- ✅ Backend Docker image publishing to GHCR
+- ✅ Frontend Docker image publishing to GHCR
+- ✅ Kubernetes backend Deployment
+- ✅ Kubernetes frontend Deployment
+- ✅ Multiple backend replicas
+- ✅ Multiple frontend replicas
+- ✅ Kubernetes ClusterIP Services
+- ✅ Traefik Ingress routing
+- ✅ Spring Boot Actuator health endpoints
+- ✅ Kubernetes readiness probes
+- ✅ Kubernetes liveness probes
+- ✅ CPU and memory resource requests and limits
+- ✅ Horizontal Pod Autoscaler
+- ✅ Kubernetes self-healing
+- ✅ MySQL running inside Kubernetes
+- ✅ MySQL persistent storage using PVC
+- ✅ Kubernetes ConfigMap
+- ✅ Kubernetes Secret management
+- ✅ Environment-variable based application configuration
+- ✅ Rolling Deployment support
+- ✅ Full-stack `/` and `/api` routing
+- ✅ End-to-end Kubernetes verification
+- ✅ GitHub Actions pipeline verified successfully
 
-> **Note:** The CI/CD pipeline currently builds the backend with `-DskipTests`. Automated test execution is tracked as a future improvement.
+> **Current CI note:** The backend is currently built using `-DskipTests`. Automated backend test execution is listed as a future improvement.
 
 ---
 
+<a id="project-structure"></a>
 ## 📁 Project Structure
 
 ```text
@@ -107,11 +142,21 @@ Sri_Lanka_Travel_Agency_Full_Stack_V4/
 │
 ├── database/
 │
+├── docs/
+│   └── screenshots/
+│       ├── api-success.png
+│       ├── architecture.png
+│       ├── deployment-rollout.png
+│       ├── kubernetes-hpa.png
+│       ├── kubernetes-ingress.png
+│       ├── kubernetes-pods.png
+│       └── mysql-pvc.png
+│
 ├── frontend/
-│   ├── src/
 │   ├── public/
-│   ├── Dockerfile
+│   ├── src/
 │   ├── .dockerignore
+│   ├── Dockerfile
 │   ├── nginx.conf
 │   ├── package.json
 │   └── vite.config.js
@@ -131,27 +176,69 @@ Sri_Lanka_Travel_Agency_Full_Stack_V4/
 ├── travel/
 │   ├── src/
 │   ├── Dockerfile
-│   ├── pom.xml
-│   └── mvnw
+│   ├── mvnw
+│   └── pom.xml
 │
 ├── .gitignore
 └── README.md
 ```
 
-> `kubernetes/secret.yaml`, local environment files, private keys, and build/dependency artifacts (`node_modules`, build output) are excluded from Git.
+> `kubernetes/secret.yaml`, local environment files, private keys, frontend build output, backend build output, and `node_modules` are excluded from Git where appropriate.
 
 ---
 
+<a id="system-architecture"></a>
 ## 🏗️ System Architecture
 
 <div align="center">
-  <img src="docs/screenshots/architecture.png" alt="Cloud-Native DevOps Architecture — Serendib Trails Travel Agency" width="100%">
+  <img src="docs/screenshots/architecture.png" alt="Sri Lanka Travel Agency Cloud-Native DevOps Architecture" width="100%">
 </div>
 
-The flow: a developer pushes code → **GitHub Actions** checks it out, builds and tests it with **Maven**, then builds and pushes a **Docker** image to **GHCR**. Inside the **k3d/K3s** cluster, **Traefik Ingress** routes browser traffic to the Kubernetes Service in front of the Spring Boot pods. Those pods read configuration from a **ConfigMap** and credentials from a **Secret**, scale automatically via the **HPA** (2–5 replicas, 50% CPU target), and connect to a **MySQL** pod backed by a **Persistent Volume Claim** for durable storage.
+The architecture image is a visual overview of the project. The exact implemented full-stack routing is shown below.
+
+```text
+Developer
+   │
+   ▼
+GitHub Repository
+   │
+   ▼
+GitHub Actions CI/CD
+   │
+   ├── Build Spring Boot backend
+   ├── Build backend Docker image
+   ├── Push backend image to GHCR
+   ├── Build React/Vite frontend image
+   └── Push frontend image to GHCR
+            │
+            ▼
+      k3d / K3s Cluster
+            │
+            ▼
+      Traefik Ingress
+       /          /api
+       │            │
+       ▼            ▼
+Frontend Service   Backend Service
+       │            │
+       ▼            ▼
+React + Nginx      Spring Boot Pods
+Pods (2)           Pods (2–5 via HPA)
+                       │
+                       ▼
+                  MySQL Service
+                       │
+                       ▼
+                  MySQL Pod
+                       │
+                       ▼
+                  Persistent PVC
+```
+
+### Mermaid Architecture
 
 <details>
-<summary>📊 View as Mermaid diagram (text-based alternative)</summary>
+<summary>View the text-based architecture diagram</summary>
 
 ```mermaid
 flowchart TD
@@ -159,68 +246,150 @@ flowchart TD
 
     GH --> GHA[GitHub Actions CI/CD]
 
-    GHA -->|Build Spring Boot| BBUILD[Backend Build]
-    GHA -->|Build React/Vite| FBUILD[Frontend Build]
+    GHA --> BBUILD[Build Spring Boot Backend]
+    GHA --> FBUILD[Build React/Vite Frontend]
 
-    BBUILD -->|Docker Image| GHCRB[GHCR Backend Image]
-    FBUILD -->|Docker Image| GHCRF[GHCR Frontend Image]
+    BBUILD --> GHCRB[GHCR Backend Image]
+    FBUILD --> GHCRF[GHCR Frontend Image]
 
     GHCRB --> K8S[k3d / K3s Kubernetes Cluster]
     GHCRF --> K8S
 
     USER[Browser / Client] --> TRAEFIK[Traefik Ingress<br/>travel.local]
 
-    TRAEFIK -->|/| FSVC[Frontend Service]
-    TRAEFIK -->|/api| BSVC[Backend Service]
+    TRAEFIK -->|/| FSVC[travel-frontend-service]
+    TRAEFIK -->|/api| BSVC[travel-backend-service]
 
     FSVC --> F1[Frontend Pod 1<br/>Nginx + React]
     FSVC --> F2[Frontend Pod 2<br/>Nginx + React]
 
     BSVC --> B1[Backend Pod 1<br/>Spring Boot]
     BSVC --> B2[Backend Pod 2<br/>Spring Boot]
-    BSVC -. HPA .-> B3[Additional Backend Pods<br/>up to 5]
+    BSVC -. HPA .-> BN[Additional Backend Pods<br/>up to 5]
 
-    B1 --> MYSQLSVC[MySQL Service]
+    B1 --> MYSQLSVC[mysql-service]
     B2 --> MYSQLSVC
-    B3 --> MYSQLSVC
+    BN --> MYSQLSVC
 
     MYSQLSVC --> MYSQL[MySQL Pod]
-    MYSQL --> PVC[(Persistent Volume Claim)]
+    MYSQL --> PVC[(PersistentVolumeClaim)]
 ```
 
 </details>
 
 ---
 
+<a id="getting-started"></a>
 ## ▶️ Getting Started
 
-A quick path from clone to running cluster:
+### Prerequisites
+
+Install or configure:
+
+- Docker Desktop
+- Git
+- Java 21
+- Node.js and npm
+- kubectl
+- k3d
+- GitHub access to this repository
+
+### 1. Clone the Repository
 
 ```powershell
-# 1. Clone the repository
 git clone https://github.com/Induwara09/Travelling_Agency_Web_App.git
 cd Travelling_Agency_Web_App
 git checkout devops-version-1
+```
 
-# 2. Create the local Kubernetes cluster
+### 2. Create the Kubernetes Cluster
+
+```powershell
 k3d cluster create travel-cluster
+```
 
-# 3. Apply Kubernetes manifests
-kubectl apply -f kubernetes/
+Verify:
 
-# 4. Verify everything is running
+```powershell
+kubectl get nodes
+```
+
+### 3. Create the MySQL Secret
+
+The real database password is intentionally not committed to Git.
+
+```powershell
+kubectl create secret generic mysql-secret `
+  --from-literal=MYSQL_ROOT_PASSWORD="<YOUR_DB_PASSWORD>"
+```
+
+Verify the Secret metadata:
+
+```powershell
+kubectl describe secret mysql-secret
+```
+
+### 4. Apply Kubernetes Resources in Order
+
+```powershell
+kubectl apply -f kubernetes/mysql-pvc.yaml
+kubectl apply -f kubernetes/mysql-deployment.yaml
+kubectl apply -f kubernetes/configmap.yaml
+kubectl apply -f kubernetes/backend-deployment.yaml
+kubectl apply -f kubernetes/hpa.yaml
+kubectl apply -f kubernetes/frontend-deployment.yaml
+kubectl apply -f kubernetes/ingress.yaml
+```
+
+### 5. Verify the Cluster
+
+```powershell
 kubectl get pods
+kubectl get deployments
 kubectl get services
+kubectl get pvc
+kubectl get hpa
 kubectl get ingress
 ```
 
-**Prerequisites:** Docker Desktop, `k3d`/`K3s`, `kubectl`, Java 21, Node.js, and Maven (or the bundled `mvnw`).
+### 6. Forward Traefik for Local Access
+
+```powershell
+kubectl port-forward -n kube-system service/traefik 8084:80
+```
+
+Keep that terminal open.
+
+### 7. Test the Frontend
+
+Open a second terminal:
+
+```powershell
+curl.exe -H "Host: travel.local" http://localhost:8084/
+```
+
+Expected result: frontend HTML.
+
+### 8. Test the Backend API
+
+```powershell
+curl.exe -H "Host: travel.local" http://localhost:8084/api/destinations
+```
+
+Expected result: destination JSON data.
 
 ---
 
+<a id="cicd-pipeline"></a>
 ## 🔄 CI/CD Pipeline
 
-The project uses **GitHub Actions** for continuous integration and container image publishing, triggered on pushes to the `devops-version-1` branch.
+The project uses **GitHub Actions** for Continuous Integration and container image publishing.
+
+The workflow runs on pushes and pull requests targeting:
+
+```text
+devops-version-1
+```
 
 ### Pipeline Flow
 
@@ -231,31 +400,64 @@ The project uses **GitHub Actions** for continuous integration and container ima
 | 3 | Cache Maven dependencies |
 | 4 | Grant execute permission to the Maven wrapper |
 | 5 | Build the Spring Boot backend |
-| 6 | Authenticate to GitHub Container Registry |
-| 7 | Build the backend Docker image |
-| 8 | Push the backend image to GHCR |
-| 9 | Build the frontend Docker image |
-| 10 | Push the frontend image to GHCR |
+| 6 | Authenticate to GitHub Container Registry on push |
+| 7 | Build and push the backend Docker image |
+| 8 | Build and push the frontend Docker image |
 
 ### Published Images
+
+Backend:
 
 ```text
 ghcr.io/induwara09/travel-agency-backend:latest
 ghcr.io/induwara09/travel-agency-backend:<commit-sha>
+```
 
+Frontend:
+
+```text
 ghcr.io/induwara09/travel-agency-frontend:latest
 ghcr.io/induwara09/travel-agency-frontend:<commit-sha>
 ```
 
-This delivers a fully automated path: **source code → build → Docker image → container registry → Kubernetes-ready deployment.**
+The automated path is:
+
+```text
+Source Code
+    ↓
+GitHub
+    ↓
+GitHub Actions
+    ↓
+Maven / Frontend Build
+    ↓
+Docker Build
+    ↓
+GitHub Container Registry
+    ↓
+Kubernetes-ready Images
+```
 
 ---
 
+<a id="docker"></a>
 ## 🐳 Docker
 
 ### Backend
 
-Packaged from `travel/Dockerfile`, exposing container port **8080**.
+The Spring Boot backend is packaged using:
+
+```text
+travel/Dockerfile
+```
+
+The backend container exposes:
+
+```text
+8080
+```
+
+Build locally:
 
 ```powershell
 cd travel
@@ -265,7 +467,14 @@ docker build -t travel-agency-backend:1.0 .
 
 ### Frontend
 
-Built using a **multi-stage Docker build**: Node.js compiles the Vite application, and Nginx serves the production build while also supporting React SPA routing and backend API proxying.
+The frontend uses a **multi-stage Docker build**.
+
+- Node.js installs dependencies and builds the Vite application.
+- Nginx serves the generated production files.
+- React SPA routing is supported using Nginx.
+- The production frontend uses same-origin API paths.
+
+Build locally:
 
 ```powershell
 cd frontend
@@ -276,166 +485,306 @@ docker build -t travel-agency-frontend:1.0 .
 
 ---
 
+<a id="kubernetes-cluster"></a>
 ## ☸️ Kubernetes Cluster
 
-The application runs on a local **k3d/K3s** cluster.
+The project runs on a local Kubernetes cluster using **k3d/K3s**.
+
+Create the cluster:
 
 ```powershell
-# Create the cluster
 k3d cluster create travel-cluster
-
-# Inspect cluster state
-kubectl get nodes
-kubectl get pods
-kubectl get deployments
-kubectl get services
 ```
+
+Useful checks:
+
+```powershell
+k3d cluster list
+kubectl get nodes
+kubectl cluster-info
+kubectl get pods -A
+```
+
+The cluster used in this project was created without an explicit Windows host port mapping for Traefik. Local access is therefore demonstrated using `kubectl port-forward`.
 
 ---
 
+<a id="mysql-deployment"></a>
 ## 🗄️ MySQL Deployment
 
-MySQL runs inside the cluster with the following configuration:
+MySQL runs inside the Kubernetes cluster.
+
+Configuration:
 
 ```text
-Database: travel_db
-Image:    mysql:8.4
-Service:  mysql-service
+Database : travel_db
+Image    : mysql:8.4
+Service  : mysql-service
+Port     : 3306
 ```
+
+Check MySQL:
 
 ```powershell
 kubectl get pods
 kubectl get service mysql-service
 ```
 
-### 💾 Persistent Storage
+The Spring Boot backend connects to MySQL using the internal Kubernetes hostname:
 
-A **PersistentVolumeClaim (PVC)** of `1Gi` decouples database storage from the MySQL pod's lifecycle, so data survives pod recreation.
+```text
+mysql-service:3306
+```
+
+---
+
+<a id="persistent-storage"></a>
+## 💾 Persistent Storage
+
+A **PersistentVolumeClaim (PVC)** is used so database data is not tied to the lifecycle of one MySQL pod.
+
+Configured storage:
+
+```text
+1Gi
+```
+
+Check the PVC:
 
 ```powershell
 kubectl get pvc
 ```
 
-Expected state: `STATUS: Bound`
+Expected status:
+
+```text
+Bound
+```
+
+<div align="center">
+  <img src="docs/screenshots/mysql-pvc.png" alt="MySQL Persistent Volume Claim" width="90%">
+</div>
 
 ---
 
+<a id="configmap-and-secret-management"></a>
 ## 🔐 ConfigMap and Secret Management
 
 | Type | Purpose | Examples |
 |---|---|---|
-| **ConfigMap** | Non-sensitive configuration | `DB_URL`, `DB_USERNAME`, `DESTINATION_SEED_ENABLED` |
+| **ConfigMap** | Non-sensitive application configuration | `DB_URL`, `DB_USERNAME`, `DESTINATION_SEED_ENABLED` |
 | **Secret** | Sensitive values | `MYSQL_ROOT_PASSWORD` |
 
-Create the Secret safely (never commit real values):
+The ConfigMap stores values such as:
+
+```text
+DB_URL=jdbc:mysql://mysql-service:3306/travel_db...
+DB_USERNAME=root
+DESTINATION_SEED_ENABLED=false
+```
+
+The MySQL password is created directly in the cluster instead of being committed to the repository.
 
 ```powershell
 kubectl create secret generic mysql-secret `
   --from-literal=MYSQL_ROOT_PASSWORD="<YOUR_DB_PASSWORD>"
 ```
 
-> Never commit real database passwords, tokens, API keys, `.env` files, private keys, or production secrets to Git.
+> Never commit real passwords, tokens, API keys, private keys, or production credentials to Git.
 
 ---
 
+<a id="backend-kubernetes-deployment"></a>
 ## 🧩 Backend Kubernetes Deployment
 
+Backend configuration:
+
 ```text
-Minimum replicas: 2
-Container port:   8080
-Service:          travel-backend-service
+Deployment : travel-backend
+Replicas   : 2 minimum
+Port       : 8080
+Service    : travel-backend-service
 ```
+
+Apply:
+
+```powershell
+kubectl apply -f kubernetes/backend-deployment.yaml
+```
+
+Check:
 
 ```powershell
 kubectl get deployment travel-backend
+kubectl get pods
 kubectl rollout status deployment/travel-backend
 ```
 
-A successful rollout reports:
+Successful rollout:
 
 ```text
 deployment "travel-backend" successfully rolled out
 ```
 
+<div align="center">
+  <img src="docs/screenshots/deployment-rollout.png" alt="Backend Kubernetes Deployment Rollout" width="90%">
+</div>
+
 ---
 
+<a id="frontend-kubernetes-deployment"></a>
 ## 🎨 Frontend Kubernetes Deployment
 
+Frontend configuration:
+
 ```text
-Replicas:       2
-Container port: 80
-Service:        travel-frontend-service
+Deployment : travel-frontend
+Replicas   : 2
+Port       : 80
+Service    : travel-frontend-service
 ```
+
+Apply:
+
+```powershell
+kubectl apply -f kubernetes/frontend-deployment.yaml
+```
+
+Check:
 
 ```powershell
 kubectl get deployment travel-frontend
 kubectl rollout status deployment/travel-frontend
 ```
 
+The frontend pods run **Nginx**, which serves the production React/Vite build.
+
 ---
 
+<a id="traefik-ingress"></a>
 ## 🌐 Traefik Ingress
 
-**Traefik** exposes the full application through a single hostname, `travel.local`:
+**Traefik Ingress** exposes the full application through one host:
+
+```text
+travel.local
+```
+
+Routing:
 
 | Path | Routed To |
 |---|---|
 | `/` | `travel-frontend-service` |
 | `/api` | `travel-backend-service` |
 
+Check the Ingress:
+
 ```powershell
 kubectl get ingress
 ```
 
-Expected resource: `travel-app-ingress`
+Expected final Ingress resource:
 
-### 🔌 Local Ingress Testing
+```text
+travel-app-ingress
+```
 
-Since the k3d cluster was created without a direct host port mapping, forward Traefik locally:
+<div align="center">
+  <img src="docs/screenshots/kubernetes-ingress.png" alt="Kubernetes Traefik Ingress" width="90%">
+</div>
+
+### Local Ingress Testing
 
 ```powershell
 kubectl port-forward -n kube-system service/traefik 8084:80
 ```
 
-```powershell
-# Frontend — expect HTML
-curl.exe -H "Host: travel.local" http://localhost:8084/
+Frontend:
 
-# Backend — expect destination JSON
+```powershell
+curl.exe -H "Host: travel.local" http://localhost:8084/
+```
+
+Backend:
+
+```powershell
 curl.exe -H "Host: travel.local" http://localhost:8084/api/destinations
 ```
 
 ---
 
+<a id="readiness-and-liveness-probes"></a>
 ## ❤️ Readiness and Liveness Probes
 
-Spring Boot Actuator health endpoints drive Kubernetes health monitoring:
+Spring Boot Actuator provides Kubernetes-compatible health endpoints.
 
 | Probe | Endpoint | Purpose |
 |---|---|---|
-| **Readiness** | `/actuator/health/readiness` | Is the pod ready to receive traffic? |
-| **Liveness** | `/actuator/health/liveness` | Is the application alive and healthy? |
+| **Readiness** | `/actuator/health/readiness` | Checks whether the pod is ready to receive traffic |
+| **Liveness** | `/actuator/health/liveness` | Checks whether the application is alive and healthy |
 
-Kubernetes automatically restarts unhealthy containers, improving overall reliability and availability.
+If readiness fails, Kubernetes removes the pod from active Service traffic.
+
+If liveness repeatedly fails, Kubernetes can restart the container.
+
+This improves application reliability and availability.
 
 ---
 
+<a id="horizontal-pod-autoscaling"></a>
 ## 📈 Horizontal Pod Autoscaling
 
+The backend uses a **Horizontal Pod Autoscaler (HPA)**.
+
+Configuration:
+
 ```text
-Minimum replicas:       2
-Maximum replicas:       5
-Target CPU utilization: 50%
+Minimum replicas       : 2
+Maximum replicas       : 5
+Target CPU utilization : 50%
 ```
+
+Check HPA:
 
 ```powershell
 kubectl get hpa
+```
+
+Check CPU and memory:
+
+```powershell
 kubectl top pods
 ```
 
-### 🧪 Load Testing
+<div align="center">
+  <img src="docs/screenshots/kubernetes-hpa.png" alt="Kubernetes Horizontal Pod Autoscaler" width="90%">
+</div>
 
-Generate temporary load from PowerShell:
+During load testing, the backend successfully scaled:
+
+```text
+2 replicas
+    ↓
+3 replicas
+    ↓
+5 replicas
+```
+
+After load was removed and the HPA stabilization period completed, Kubernetes returned the backend to:
+
+```text
+2 replicas
+```
+
+### HPA Load Test
+
+First forward the backend Service:
+
+```powershell
+kubectl port-forward service/travel-backend-service 8081:8080
+```
+
+Generate temporary load in another PowerShell terminal:
 
 ```powershell
 1..20 | ForEach-Object {
@@ -450,22 +799,27 @@ Generate temporary load from PowerShell:
 }
 ```
 
-```powershell
-# Watch scaling in real time
-kubectl get hpa -w
+Watch HPA:
 
-# Stop the load
+```powershell
+kubectl get hpa -w
+```
+
+Stop the load:
+
+```powershell
 Get-Job | Stop-Job
 Get-Job | Remove-Job
 ```
 
-During testing, the deployment scaled **2 → 3 → 5 replicas** under load, then returned to **2 replicas** once load was removed and the stabilization window completed.
-
 ---
 
+<a id="kubernetes-self-healing"></a>
 ## 🛠️ Kubernetes Self-Healing
 
-Kubernetes continuously maintains the desired replica count.
+Kubernetes automatically maintains the desired number of backend replicas.
+
+Self-healing was verified by deleting one backend pod:
 
 ```powershell
 kubectl get pods
@@ -473,183 +827,243 @@ kubectl delete pod <backend-pod-name>
 kubectl get pods -w
 ```
 
-Deleting a backend pod triggers automatic replacement by the Deployment controller — confirming self-healing and improved availability.
+The Deployment controller automatically created a replacement pod and restored the backend to its required replica count.
+
+This demonstrates:
+
+- Automatic pod recovery
+- Desired-state management
+- Fault tolerance
+- Improved availability
 
 ---
 
+<a id="rolling-updates"></a>
 ## 🔄 Rolling Updates
+
+Kubernetes Deployments support rolling updates.
+
+Backend:
 
 ```powershell
 kubectl rollout status deployment/travel-backend
+```
+
+Frontend:
+
+```powershell
 kubectl rollout status deployment/travel-frontend
 ```
 
-Rolling updates let new versions roll out while existing replicas continue serving traffic.
+Rolling updates allow Kubernetes to introduce new application versions while managing existing replicas during the rollout.
 
 ---
 
+<a id="troubleshooting"></a>
 ## 🩺 Health and Troubleshooting Commands
 
 | Task | Command |
 |---|---|
 | View pod status | `kubectl get pods` |
-| Describe a pod | `kubectl describe pod <pod-name>` |
-| View logs | `kubectl logs <pod-name>` |
+| View detailed pod information | `kubectl describe pod <pod-name>` |
+| View application logs | `kubectl logs <pod-name>` |
 | View previous crash logs | `kubectl logs <pod-name> --previous` |
 | View cluster events | `kubectl get events --sort-by=.lastTimestamp` |
+| Check deployments | `kubectl get deployments` |
 | Check services | `kubectl get services` |
-| Check ingress | `kubectl get ingress` |
-| Check autoscaling | `kubectl get hpa` |
-| Check persistent storage | `kubectl get pvc` |
+| Check Ingress | `kubectl get ingress` |
+| Check HPA | `kubectl get hpa` |
+| Check PVC | `kubectl get pvc` |
 | Check resource usage | `kubectl top pods` |
 
-### 🔎 Common Pod States
+### Common Pod States
 
 | Status | Meaning | First Check |
 |---|---|---|
-| `Pending` | Scheduling, resource, or storage issue | `kubectl describe pod <name>` |
+| `Pending` | Scheduling, storage, or resource issue | `kubectl describe pod <name>` |
 | `ContainerCreating` | Image, network, or volume setup | `kubectl describe pod <name>` |
-| `ErrImagePull` | Kubernetes could not pull the image | Check registry/image/DNS |
+| `ErrImagePull` | Kubernetes could not pull the image | Check image, registry, and DNS |
 | `ImagePullBackOff` | Repeated image pull failure | Inspect pod events |
 | `CrashLoopBackOff` | Application repeatedly crashes | `kubectl logs <name> --previous` |
-| `Running 0/1` | Container running but not Ready | Check readiness probe |
-| `Running 1/1` | Pod healthy and Ready | Normal |
+| `Running 0/1` | Container is running but not Ready | Check readiness probe |
+| `Running 1/1` | Pod is healthy and Ready | Normal |
 
 ---
 
+<a id="security"></a>
 ## 🔐 Security
 
-- Database configuration is fully externalized
-- Sensitive values live in Kubernetes **Secrets**; non-sensitive values in **ConfigMaps**
-- Runtime configuration is environment-variable driven
-- No real credentials are committed to YAML
-- `.env` files, private keys, and `kubernetes/secret.yaml` are excluded from Git
-- GitHub Actions uses the repository-provided `GITHUB_TOKEN` for GHCR publishing
+The project follows these security practices:
+
+- Database configuration is externalized.
+- Kubernetes Secrets are used for sensitive values.
+- ConfigMaps are used for non-sensitive configuration.
+- Runtime configuration is environment-variable driven.
+- Real database credentials are not stored in committed Kubernetes YAML.
+- `.env` files are excluded from Git.
+- `.pem` and `.key` files are excluded from Git.
+- `kubernetes/secret.yaml` is excluded from Git.
+- GitHub Actions uses the repository-provided `GITHUB_TOKEN` for GHCR publishing.
 
 ---
 
+<a id="project-result"></a>
 ## ✅ Project Result
 
 The Sri Lanka Travel Agency application was successfully:
 
-- Built with React, Spring Boot, Maven, and MySQL
-- Containerized with Docker and published to GHCR
+- Built using React, Vite, Spring Boot, Maven, and MySQL
+- Configured using environment variables
+- Containerized using Docker
+- Published to GitHub Container Registry
 - Integrated with GitHub Actions CI/CD
-- Deployed to Kubernetes via k3d/K3s with multiple frontend and backend replicas
-- Connected to MySQL running inside the cluster with persistent storage
-- Secured with Kubernetes Secrets and configured via ConfigMaps
-- Monitored through Spring Boot Actuator readiness/liveness probes
-- Verified for self-healing and scaled up to five backend replicas under load
-- Exposed and tested end-to-end through Traefik Ingress
-- Confirmed via a fully passing GitHub Actions pipeline
+- Deployed to Kubernetes using k3d/K3s
+- Configured with two frontend replicas
+- Configured with two backend replicas at normal load
+- Connected to MySQL running inside Kubernetes
+- Configured with persistent MySQL storage
+- Protected using Kubernetes Secrets
+- Configured using Kubernetes ConfigMaps
+- Monitored using Spring Boot Actuator
+- Configured with readiness probes
+- Configured with liveness probes
+- Tested for Kubernetes self-healing
+- Configured with CPU and memory resource limits
+- Configured with Horizontal Pod Autoscaling
+- Successfully scaled to five backend replicas under load
+- Automatically scaled back down after load testing
+- Exposed through Traefik Ingress
+- Configured with `/` frontend routing
+- Configured with `/api` backend routing
+- Successfully tested through the Kubernetes environment
+- Verified with a successful GitHub Actions pipeline
 
 ---
 
+<a id="project-evidence"></a>
 ## 📸 Project Evidence / Screenshots
 
-Live captures from the running cluster, confirming every layer of the stack is healthy end to end.
+The following screenshots were captured from the running project and provide evidence for the Kubernetes and DevOps implementation.
+
+### 🏗️ System Architecture
+
+<div align="center">
+  <img src="docs/screenshots/architecture.png" alt="System Architecture" width="100%">
+</div>
 
 ### ☸️ Kubernetes Pods
 
-All backend, frontend, and MySQL pods `Running` with `1/1` readiness across the k3d cluster:
+All MySQL, backend, and frontend pods were verified in `Running` state with `1/1` readiness.
 
 <div align="center">
   <img src="docs/screenshots/kubernetes-pods.png" alt="Kubernetes Pods Status" width="90%">
 </div>
 
-### 🚀 Deployment Rollout
+### 🚀 Backend Deployment Rollout
 
-The `travel-backend` Deployment rolling out successfully:
+The `travel-backend` Deployment completed successfully.
 
 <div align="center">
-  <img src="docs/screenshots/kubernetes-deployments.png" alt="Kubernetes Deployment Rollout" width="90%">
+  <img src="docs/screenshots/deployment-rollout.png" alt="Kubernetes Deployment Rollout" width="90%">
 </div>
 
 ### 🌐 Traefik Ingress
 
-The `travel-app-ingress` resource routing `travel.local` through Traefik:
+The `travel-app-ingress` resource exposes `travel.local` through Traefik.
 
 <div align="center">
   <img src="docs/screenshots/kubernetes-ingress.png" alt="Traefik Ingress" width="90%">
 </div>
 
+### 📈 Horizontal Pod Autoscaler
+
+The backend HPA is configured with a 50% CPU target, minimum 2 replicas, and maximum 5 replicas.
+
+<div align="center">
+  <img src="docs/screenshots/kubernetes-hpa.png" alt="Horizontal Pod Autoscaler" width="90%">
+</div>
+
 ### 🗄️ MySQL Persistent Storage
 
-The `mysql-pvc` claim `Bound` at `1Gi` on the `local-path` storage class:
+The `mysql-pvc` PersistentVolumeClaim was verified in `Bound` state.
 
 <div align="center">
   <img src="docs/screenshots/mysql-pvc.png" alt="MySQL Persistent Volume Claim" width="90%">
 </div>
 
-<details>
-<summary>➕ Additional screenshots (add as captured)</summary>
+### ✅ Backend API Test
 
-To extend this section, drop new images into `docs/screenshots/` and reference them the same way:
+The backend `/api/destinations` endpoint was successfully accessed through Traefik Ingress.
 
-```text
-docs/screenshots/
-├── github-actions-success.png
-├── kubernetes-hpa.png
-├── backend-api-success.png
-├── frontend-kubernetes.png
-└── website-home.png
-```
-
-```markdown
-![GitHub Actions Success](docs/screenshots/github-actions-success.png)
-![Horizontal Pod Autoscaler](docs/screenshots/kubernetes-hpa.png)
-![Backend API Test](docs/screenshots/backend-api-success.png)
-![Frontend on Kubernetes](docs/screenshots/frontend-kubernetes.png)
-![Travel Agency Website](docs/screenshots/website-home.png)
-```
-
-</details>
+<div align="center">
+  <img src="docs/screenshots/api-success.png" alt="Backend API Success" width="90%">
+</div>
 
 ---
 
+<a id="learning-outcomes"></a>
 ## 🧠 Key DevOps Learning Outcomes
 
+This project provided practical experience with:
+
 - Git branching and repository management
-- Environment-based configuration
-- Docker image creation & multi-stage frontend builds
+- Environment-based application configuration
+- Docker image creation
+- Multi-stage frontend container builds
+- Nginx
 - GitHub Actions workflow development
-- GitHub Container Registry publishing
-- Kubernetes Deployments and Services
+- GitHub Container Registry
+- Kubernetes Deployments
+- Kubernetes Services
+- Kubernetes networking
+- MySQL deployment inside Kubernetes
 - Persistent database storage
-- Kubernetes Secrets and ConfigMaps
-- Health checks, probes, and self-healing
+- Kubernetes Secrets
+- Kubernetes ConfigMaps
+- Spring Boot Actuator
+- Readiness and liveness probes
+- Kubernetes self-healing
 - Horizontal Pod Autoscaling
-- Traefik Ingress routing
-- CI/CD and Kubernetes troubleshooting
-- Full-stack application deployment, end to end
+- CPU and memory resource management
+- Traefik Ingress
+- CI/CD troubleshooting
+- Kubernetes troubleshooting
+- Full-stack Kubernetes deployment
 
 ---
 
+<a id="future-improvements"></a>
 ## 🔮 Future Improvements
 
-- [ ] Run automated backend tests in GitHub Actions
+Possible future improvements include:
+
+- [ ] Enable automated backend tests in GitHub Actions
 - [ ] Add frontend linting and automated tests
-- [ ] Use immutable image tags in Kubernetes manifests
+- [ ] Use immutable container image tags for Kubernetes deployments
 - [ ] Add Helm or Kustomize for manifest management
-- [ ] Add Prometheus and Grafana for monitoring
+- [ ] Add Prometheus and Grafana monitoring
 - [ ] Add centralized logging
-- [ ] Add HTTPS/TLS with a real domain name
+- [ ] Add HTTPS/TLS
+- [ ] Add a real domain name
 - [ ] Deploy to AWS EKS, Azure AKS, or Google GKE
-- [ ] Manage infrastructure with Terraform
-- [ ] Adopt an external secret manager for production
+- [ ] Manage infrastructure using Terraform
+- [ ] Use an external secret manager for production credentials
 
 ---
 
+<a id="author"></a>
 ## 👨‍💻 Author
 
 **Induwara**
-Computer Systems Engineering Undergraduate
+
+Computer Systems Engineering Undergraduate  
 Sri Lanka Institute of Information Technology (SLIIT)
 
 [![GitHub](https://img.shields.io/badge/GitHub-Induwara09-181717?logo=github)](https://github.com/Induwara09)
 
 ---
 
+<a id="repository"></a>
 ## 📌 Repository
 
 | | |
@@ -661,6 +1075,6 @@ Sri Lanka Institute of Information Technology (SLIIT)
 
 <div align="center">
 
-*This repository is an educational DevOps project demonstrating how a full-stack application moves from local development to a containerized, automated, and Kubernetes-managed deployment environment.*
+*This repository is an educational DevOps project demonstrating how a full-stack application can move from local development to a containerized, automated, scalable, and Kubernetes-managed environment.*
 
 </div>
